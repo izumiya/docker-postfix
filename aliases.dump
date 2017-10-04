@@ -1,0 +1,5 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE mxaliases (alias text, forw_addr text);
+CREATE UNIQUE INDEX alias_uniq_idx on mxaliases (alias);
+COMMIT;

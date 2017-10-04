@@ -1,0 +1,5 @@
+# Path to database 
+dbpath = /srv/aliases.sqlite3
+
+# See sqlite_table(5) for details.
+query = SELECT forw_addr FROM mxaliases WHERE alias='%s'

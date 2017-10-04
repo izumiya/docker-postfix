@@ -6,8 +6,10 @@ postconf -e smtputf8_enable=no
 # Update aliases database. It's not used, but postfix complains if the .db file is missing
 postalias /etc/postfix/aliases
 
-# Disable local mail delivery
-postconf -e mydestination=
+# Use alias_maps
+postconf -e alias_maps=sqlite:/etc/postfix/sqlite-aliases.cf
+postconf -e local_recipient_maps='$alias_maps'
+
 # Don't relay for any domains
 postconf -e relay_domains=
 
@@ -21,6 +23,13 @@ if [[ ! -z "$HOSTNAME" ]]; then
 	postconf -e myhostname=$HOSTNAME
 else
 	postconf -# myhostname
+fi
+
+# Set up destination name
+if [[ ! -z "$DESTNAME" ]]; then
+	postconf -e mydestination=$DESTNAME
+else
+	postconf -e mydestination=
 fi
 
 # Set up a relay host, if needed

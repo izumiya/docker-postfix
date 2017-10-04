@@ -11,9 +11,13 @@ MAINTAINER Bojan Cekrlic
 # Limit the list of sending domains to this list only
 
 RUN	true && \
-	apk add --no-cache --update postfix ca-certificates supervisor rsyslog bash && \
-    apk add --no-cache --upgrade musl musl-utils && \
+	apk add --no-cache --update postfix ca-certificates supervisor rsyslog bash curl postfix-sqlite sqlite && \
+	apk add --no-cache --upgrade musl musl-utils && \
 	(rm "/tmp/"* 2>/dev/null || true) && (rm -rf /var/cache/apk/* 2>/dev/null || true)
+
+COPY	sqlite-aliases.cf /etc/postfix/sqlite-aliases.cf
+COPY	aliases.dump /tmp/aliases.dump
+RUN	echo .read /tmp/aliases.dump | sqlite3 /srv/aliases.sqlite3
 
 COPY	supervisord.conf /etc/supervisord.conf
 COPY	rsyslog.conf /etc/rsyslog.conf
